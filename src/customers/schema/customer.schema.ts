@@ -1,6 +1,7 @@
+import { Schema } from "@nestjs/mongoose";
 
 
-// @Schema()
-// export class Customer{
+@Schema({ timestamps: true })
+export class Customer {
 
-// }
+}
