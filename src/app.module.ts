@@ -23,19 +23,6 @@ dotenv.config({})
       load: [configuration]
     }),
     MongooseModule.forRoot(config.DB_URI, { retryAttempts: 6 }),
-    // MongooseModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: async (config: ConfigService) => {
-    //     const uri = config.get<string>('DB_URI');
-    //     return {
-    //       uri,
-    //       retryAttempts: 3,
-    //       useNewUrlParser: true,
-    //       useUnifiedTopology: true
-    //     };
-    //   },
-    // }),
     JwtModule.register({
       global: true,
       secret: config.jwt.secret,
@@ -45,4 +32,4 @@ dotenv.config({})
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
