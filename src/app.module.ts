@@ -7,20 +7,41 @@ import { WalletModule } from './wallet/wallet.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import configuration from './config/config';
-import { ConfigModule } from '@nestjs/config';
-
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { FlutterwaveModule } from './flutterwave/flutterwave.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv'
 
 const config = configuration()
 
+dotenv.config({})
+
 @Module({
-  imports: [JwtModule.register({
-    global: true,
-    secret: config.jwt.secret,
-    signOptions: { expiresIn: config.jwt.expires_in }
-  }), ConfigModule.forRoot({
-    load: [configuration]
-  })
-    , CustomersModule, TransactionsModule, WalletModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration]
+    }),
+    MongooseModule.forRoot(config.DB_URI, { retryAttempts: 6 }),
+    // MongooseModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (config: ConfigService) => {
+    //     const uri = config.get<string>('DB_URI');
+    //     return {
+    //       uri,
+    //       retryAttempts: 3,
+    //       useNewUrlParser: true,
+    //       useUnifiedTopology: true
+    //     };
+    //   },
+    // }),
+    JwtModule.register({
+      global: true,
+      secret: config.jwt.secret,
+      signOptions: { expiresIn: config.jwt.expires_in }
+    }), CustomersModule, TransactionsModule, WalletModule, AuthModule, FlutterwaveModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
