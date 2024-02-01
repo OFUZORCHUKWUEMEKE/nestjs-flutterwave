@@ -1,4 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 
 @Controller('flutterwave')
-export class FlutterwaveController {}
+export class FlutterwaveController {
+
+    @Post()
+    async createSubAccount() {
+       
+    }
+}
